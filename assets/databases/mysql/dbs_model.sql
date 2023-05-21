@@ -88,7 +88,6 @@ CREATE TABLE IF NOT EXISTS `myecommerce`.`Product` (
   `Quantity` INT NOT NULL,
   `Discount` INT NULL,
   `Description` LONGTEXT NOT NULL,
-  `Status` BIT(1) NOT NULL,
   PRIMARY KEY (`ProductID`),
   INDEX `fk_Product_Category1_idx` (`CategoryID` ASC) VISIBLE,
   CONSTRAINT `fk_Product_Category1`
