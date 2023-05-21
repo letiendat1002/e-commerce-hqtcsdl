@@ -15,9 +15,9 @@ CREATE SCHEMA IF NOT EXISTS `myecommerce` ;
 USE `myecommerce` ;
 
 -- -----------------------------------------------------
--- Table `myecommerce`.`User`
+-- Table `myecommerce`.`UserAccount`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `myecommerce`.`User` (
+CREATE TABLE IF NOT EXISTS `myecommerce`.`UserAccount` (
   `UserID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Phone` VARCHAR(255) NOT NULL,
   `Password` VARCHAR(255) NOT NULL,
@@ -37,19 +37,19 @@ CREATE TABLE IF NOT EXISTS `myecommerce`.`UserAddress` (
   `UserID` BIGINT UNSIGNED NOT NULL,
   `Address` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`UserAddressID`),
-  INDEX `fk_UserAddress_User1_idx` (`UserID` ASC) VISIBLE,
+  INDEX `fk_UserAddress_UserAccount1_idx` (`UserID` ASC) VISIBLE,
   CONSTRAINT `fk_UserAddress_User1`
     FOREIGN KEY (`UserID`)
-    REFERENCES `myecommerce`.`User` (`UserID`)
+    REFERENCES `myecommerce`.`UserAccount` (`UserID`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `myecommerce`.`Order`
+-- Table `myecommerce`.`UserOrder`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `myecommerce`.`Order` (
+CREATE TABLE IF NOT EXISTS `myecommerce`.`UserOrder` (
   `OrderID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `UserID` BIGINT UNSIGNED NOT NULL,
   `AdditionalPrice` BIGINT UNSIGNED NOT NULL,
@@ -58,10 +58,10 @@ CREATE TABLE IF NOT EXISTS `myecommerce`.`Order` (
   `DateOrder` DATE NOT NULL,
   `Status` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`OrderID`),
-  INDEX `fk_Order_User1_idx` (`UserID` ASC) VISIBLE,
-  CONSTRAINT `fk_Order_User1`
+  INDEX `fk_UserOrder_UserAccount_idx` (`UserID` ASC) VISIBLE,
+  CONSTRAINT `fk_UserOrder_UserAccount`
     FOREIGN KEY (`UserID`)
-    REFERENCES `myecommerce`.`User` (`UserID`)
+    REFERENCES `myecommerce`.`UserAccount` (`UserID`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `myecommerce`.`OrderDetail` (
   INDEX `fk_OrderDetail_Product1_idx` (`ProductID` ASC) VISIBLE,
   CONSTRAINT `fk_OrderDetail_Order1`
     FOREIGN KEY (`OrderID`)
-    REFERENCES `myecommerce`.`Order` (`OrderID`)
+    REFERENCES `myecommerce`.`UserOrder` (`OrderID`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_OrderDetail_Product1`
