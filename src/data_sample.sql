@@ -1,5 +1,15 @@
 ﻿USE myecommerce;
 
+--------------------
+INSERT INTO UserAccount
+VALUES
+	('0123456789', HASHBYTES('SHA2_256', 'admin'), 'Admin', 'Male', 'ADMIN'),
+	('1111111111', HASHBYTES('SHA2_256', 'password'), 'Employee1', 'Other', 'EMPLOYEE'),
+	('2222222222', HASHBYTES('SHA2_256', 'password'), 'Employee2', 'Other', 'EMPLOYEE'),
+	('3333333333', HASHBYTES('SHA2_256', 'password'), 'Customer1', 'Other', 'CUSTOMER'),
+	('4444444444', HASHBYTES('SHA2_256', 'password'), 'Customer2', 'Other', 'CUSTOMER')
+
+--------------------
 INSERT INTO Category
 VALUES 
 ('laptop'),
@@ -7,6 +17,7 @@ VALUES
 ('tablet'),
 ('PC');
 
+--------------------
 INSERT INTO Product
 VALUES
 (1, 'Laptop Asus ROG Strix Gaming G513IE-HN246W R7 4800H/8GB/512GB/15.6FHD/GeForce RTX 3050 Ti 4GB/Win 11', 26990000, 120, 0, 'ASUS ROG Strix Gaming G513IE-HN246W tập trung vào sức mạnh và trải nghiệm chơi game nhưng cũng không kém phần thu hút bởi thiết kế cao cấp, đèn LED ấn tượng. Mạnh mẽ ở cả cpu Ryzen 7 4800H và GPU RTX 3550 Ti, ROG Strix G513IE-HN246W hoàn hảo cho cả chơi game và làm việc đa nhiệm.'),
@@ -19,7 +30,6 @@ VALUES
 (1, 'Laptop Asus Vivobook Pro M3401QA-KM025W R7 5800H/8GB/512GB SSD/14 2.8K OLED/Win11', 17990000, 120, 0, 'Đã đến lúc bạn tận hưởng những tinh hoa của công nghệ, nơi hình ảnh tuyệt đẹp từ màn hình 2.8K OLED và âm thanh Harman Kardon tạo nên một trải nghiệm chưa từng có trên chiếc laptop ASUS Vivobook Pro M3401QA-KM025W đầy tính di động.'),
 (1, 'Laptop Asus Vivobook Flip TP3402ZA-LZ159W i5 12500H/8GB/512GB/14.0WUXGA/Bút/Win11', 18490000, 120, 0, 'ASUS Vivobook Flip TP3402ZA-LZ159W (Vivobook S14 Flip) mở ra một hành trình mới dành cho bạn nhờ bản lề xoay gập 360 độ và màn hình cảm ứng, giúp bạn làm việc hay giải trí theo cách của mình. Sức mạnh tuyệt vời từ bộ vi xử lý Intel Core i5 12500H cho bạn giải quyết mọi việc trong chớp mắt.'),
 (1, 'Laptop Asus TUF Gaming FX506HC-HN144W i5 11400H/8GB/512GB/15.6FHD/NVIDIA GeForce RTX 3050 4GB/Win 11', 20490000, 120, 0, 'Asus TUF Gaming F15 FX506HC HN144W sở hữu cấu hình tuyệt vời với những linh kiện mới nhất cùng một thiết kế di động, bền bỉ nhưng lại được bán ở mức giá rẻ đến khó tin. Đây chắc chắn là mẫu laptop gaming giá tốt mà các game thủ sẽ rất yêu thích.'),
-
 (2, 'iPhone 14 Pro Max 128GB', 27990000, 120, 0, 'iPhone 14 Pro Max đem đến những trải nghiệm không thể tìm thấy trên mọi thế hệ iPhone trước đó với màu Tím Deep Purple sang trọng, camera 48MP lần đầu xuất hiện, chip A16 Bionic và màn hình “viên thuốc” Dynamic Island linh hoạt, nịnh mắt.'),
 (2, 'iPhone 13 Pro Max 256GB', 28490000, 120, 0, 'iPhone 13 Pro Max xứng đáng là một chiếc iPhone lớn nhất, mạnh mẽ nhất và có thời lượng pin dài nhất từ trước đến nay sẽ cho bạn trải nghiệm tuyệt vời, từ những tác vụ bình thường cho đến các ứng dụng chuyên nghiệp.'),
 (2, 'iPhone 12 64GB', 15599000, 120, 0, 'iPhone 12 ra mắt với vai trò mở ra một kỷ nguyên hoàn toàn mới. Tốc độ mạng 5G siêu tốc, bộ vi xử lý A14 Bionic nhanh nhất thế giới smartphone, màn hình OLED tràn cạnh tuyệt đẹp và camera siêu chụp đêm, tất cả đều có mặt trên iPhone 12.'),
@@ -30,7 +40,6 @@ VALUES
 (2, 'Samsung Galaxy S23 Ultra 5G 256GB', 26990000, 120, 0, 'Tự hào là điện thoại Galaxy đầu tiên sở hữu cảm biến tuyệt đỉnh 200MP, Samsung Galaxy S23 Ultra đưa người dùng vào không gian nhiếp ảnh tân tiến vượt trội. Sức mạnh còn bùng nổ với vi xử lý Snapdragon mạnh nhất cho cách mạng hiệu năng gaming đột phá. Tất cả được gói gọn trong thiết kế cao cấp và bền vững cho hiện tại và tương lai.'),
 (2, 'Samsung Galaxy S22 Bora Purple 5G', 14990000, 120, 0, 'Bật nét kiêu kỳ, sẵn sàng trendy với phiên bản Samsung Galaxy S22 màu tím (Bora Purple), bạn sẽ trở nên thật thời thượng, ấn tượng và cá tính. Đồng hành đó là những công nghệ tốt nhất của Samsung từ hiệu năng Snapdragon 8 Gen 1, màn hình cao cấp cho đến hệ thống camera chuyên nghiệp.'),
 (2, 'Samsung Galaxy A73 5G', 10990000, 120, 0, 'Trải nghiệm hệ thống camera 108MP đầu tiên trên thế hệ Galaxy A, hiệu năng cực mạnh Snapdragon 778G, màn hình 120Hz mượt mà và kết nối 5G siêu tốc, Samsung Galaxy A73 5G đã sẵn sàng đưa bạn vào thế giới công nghệ đỉnh cao, giúp cuộc sống tiện lợi hơn bao giờ.'),
-
 (3, 'Samsung Galaxy Tab S6 Lite 2022', 8990000, 120, 0, 'Gặp gỡ Samsung Galaxy Tab S6 Lite 2022 - phiên bản mới với sự nâng cấp mạnh về hiệu năng Snapdragon 720G, cho mọi tác vụ mượt mà, đa nhiệm hoàn hảo từ học tập, làm việc đến giải trí. Sự hỗ trợ của bút S-Pen còn là người bạn tuyệt vời để thỏa thích sáng tạo, tăng hiệu suất công việc.'),
 (3, 'iPad Gen 9 2021 10.2 inch WiFi 64GB', 7990000, 120, 0, 'Mạnh mẽ, dễ dàng sử dụng, màn hình lớn, đặc biệt được bán ở mức giá rẻ, iPad Gen 9 10.2 2021 là chiếc máy tính bảng tuyệt vời cho mọi nhu cầu cơ bản, từ giải trí, sáng tạo, làm việc, kết nối và hơn thế nữa.'),
 (3, 'iPad mini 6 2021 8.3 inch WiFi 64GB', 12490000, 120, 0, 'Sức mạnh khủng khiếp trong một thiết kế nhỏ gọn đáng yêu, iPad Mini 6 2021 đánh dấu sự trở lại mạnh mẽ của dòng iPad mini luôn được người dùng yêu thích, nơi bạn được tận hưởng ma thuật bên trong chiếc máy tính bảng tuyệt đẹp, hiệu suất đỉnh cao và hỗ trợ bút cảm ứng Apple Pencil.'),
@@ -41,7 +50,6 @@ VALUES
 (3, 'iPad Pro 11 2021 M1 Wi-Fi 1TB', 42990000, 120, 0, 'Dành cho những người thực sự chuyên nghiệp, iPad Pro 11 inch 2021 M1 phiên bản bộ nhớ tối đa lên đến 2TB cho khả năng lưu trữ gần như vô hạn. Bên cạnh đó là sức mạnh của bộ vi xử lý Apple M1 và hệ thống camera cao cấp đang chờ đón bạn.'),
 (3, 'Samsung Galaxy Tab S8 Ultra 5G', 30990000, 120, 0, 'Trải nghiệm phiên bản tablet tuyệt vời nhất nhà Samsung - Galaxy Tab S8 Ultra, bạn sẽ thấy sự khác biệt của hiệu năng đầu bảng Snapdragon 8 Gen 1, thiết kế dẫn đầu xu hướng công nghệ và sự tiện lợi hoàn hảo của bút S-Pen thế hệ mới.'),
 (3, 'iPad Air 5 2022 10.9 inch M1 WiFi 5G 64GB', 17990000, 120, 0, 'Với sự góp mặt của chip M1 siêu mạnh, iPad Air 5 Wifi 5G 2022 đánh dấu bước nhảy vọt về hiệu năng. Kết nối 5G nhanh nhạy và camera selfie 12MP Ultra Wide sẽ mang tới cho bạn trải nghiệm chưa từng có trên tất cả các mẫu iPad Air trước đó. Sản phẩm tương thích với Apple Pencil và bàn phím Magic Keyboard nhằm nâng cao hiệu suất làm việc.'),
-
 (4, 'PC E-Power Office 12 Core i3 10105 3.7 GHz - 4.4 GHz / 8GB / 256GB / 250W', 6990000, 120, 0, 'Với mức giá rẻ đến bất ngờ, PC E-Power Office 12 vẫn sở hữu cấu hình mạnh mẽ với bộ vi xử lý Intel Core i3 10105 cùng 8GB RAM và 240GB SSD tốc độ cao. Hơn nữa, sản phẩm còn tặng kèm bộ chuột, bàn phím và USB Wi-Fi, giúp bạn làm việc vô cùng tiện lợi, dễ dàng.'),
 (4, 'PC Gaming E-Power F1650 i5 10400F/8GB/256GB/600W/GeForce GTX 1650', 13290000, 120, 0, 'PC Gaming E-Power F1650 là case máy tính chơi game nhỏ gọn, giá tốt, cấu hình cao trong tầm giá. Bộ vi xử lý Intel Core i5 10400F kết hợp cùng card đồ họa GTX 1650 đủ để chơi tốt các game Esports và trải nghiệm một số game AAA phổ biến.'),
 (4, 'iMac 24 2021 Retina 4.5K M1/8-Core cpu/7-Core GPU/8GB/256GB SSD', 31290000, 120, 0, 'Không chỉ là thiết bị làm việc sang trọng, nhỏ gọn và mạnh mẽ, iMac M1 2021 24 Retina 4.5K còn thổi bùng sức sống cho không gian của bạn với những tùy chọn màu sắc nổi bật, mang đến nhiều niềm hứng khởi.'),
