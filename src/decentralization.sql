@@ -1,7 +1,7 @@
 use myecommerce
 go
 -----------------
--- Create user --
+-- Create customer --
 -----------------
 create login user_test with password = '1234'
 create user user_test from login user_test
@@ -9,79 +9,79 @@ create user user_test from login user_test
 -- Create role user
 USE [myecommerce]
 GO
-CREATE ROLE [user]
+CREATE ROLE [customer]
 GO
 USE [myecommerce]
 GO
-ALTER AUTHORIZATION ON SCHEMA::[db_owner] TO [user]
+ALTER AUTHORIZATION ON SCHEMA::[guest] TO [customer]
 GO
 
--- User's role invole table
+-- customer's role invole table
 use [myecommerce]
 GO
-DENY UPDATE ON [dbo].[UserOrder] ([DateOrder]) TO [user]
-GO
-use [myecommerce]
-GO
-DENY UPDATE ON [dbo].[UserOrder] ([Status]) TO [user]
+DENY UPDATE ON [dbo].[UserOrder] ([DateOrder]) TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT UPDATE ON [dbo].[UserOrder] ([Address]) TO [user]
+DENY UPDATE ON [dbo].[UserOrder] ([Status]) TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT DELETE ON [dbo].[UserOrder] TO [user]
+GRANT UPDATE ON [dbo].[UserOrder] ([Address]) TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT INSERT ON [dbo].[UserOrder] TO [user]
+GRANT DELETE ON [dbo].[UserOrder] TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT SELECT ON [dbo].[UserOrder] TO [user]
+GRANT INSERT ON [dbo].[UserOrder] TO [customer]
 GO
 use [myecommerce]
 GO
-DENY UPDATE ON [dbo].[UserOrder] ([UserID]) TO [user]
+GRANT SELECT ON [dbo].[UserOrder] TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT SELECT ON [dbo].[UserAccount] TO [user]
+DENY UPDATE ON [dbo].[UserOrder] ([UserID]) TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT UPDATE ON [dbo].[UserAccount] TO [user]
+GRANT SELECT ON [dbo].[UserAccount] TO [customer]
 GO
 use [myecommerce]
 GO
-DENY UPDATE ON [dbo].[UserOrder] ([OrderID]) TO [user]
+GRANT UPDATE ON [dbo].[UserAccount] TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT UPDATE ON [dbo].[UserOrder] ([PaymentType]) TO [user]
+DENY UPDATE ON [dbo].[UserOrder] ([OrderID]) TO [customer]
 GO
 use [myecommerce]
 GO
-DENY UPDATE ON [dbo].[UserOrder] ([AdditionalPrice]) TO [user]
+GRANT UPDATE ON [dbo].[UserOrder] ([PaymentType]) TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT INSERT ON [dbo].[OrderDetail] TO [user]
+DENY UPDATE ON [dbo].[UserOrder] ([AdditionalPrice]) TO [customer]
 GO
 use [myecommerce]
 GO
-GRANT SELECT ON [dbo].[OrderDetail] TO [user]
+GRANT INSERT ON [dbo].[OrderDetail] TO [customer]
+GO
+use [myecommerce]
+GO
+GRANT SELECT ON [dbo].[OrderDetail] TO [customer]
 GO
 --Change password
 use [myecommerce]
 GO
-GRANT EXECUTE ON [dbo].[sp_change_password] TO [user]
+GRANT EXECUTE ON [dbo].[sp_change_password] TO [customer]
 GO
 
 
 -- Add member in user's role
-ALTER ROLE [user] ADD MEMBER [user_test]
+ALTER ROLE [customer] ADD MEMBER [user_test]
 GO
 
 --------------------------------
