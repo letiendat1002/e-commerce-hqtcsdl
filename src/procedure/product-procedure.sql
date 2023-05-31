@@ -324,23 +324,6 @@ GO
 --GO
 
 
--- Select Product Quantity
-CREATE PROC sp_select_product_quantity_by_productid
-	@id BIGINT,
-	@quantity INT OUTPUT
-AS
-BEGIN
-	SELECT @quantity = Quantity
-	FROM Product
-	WHERE ProductID = @id
-END
-GO
-
---DECLARE @quantity INT
---EXEC sp_select_product_quantity_by_productid 40, @quantity OUT
---print @quantity
-
-
 -- Update Product Quantity By Amount
 --DROP PROCEDURE sp_update_product_quantity_by_amount
 CREATE PROC sp_update_product_quantity_by_amount
