@@ -295,10 +295,10 @@ BEGIN
 END
 GO
 
-EXEC sp_select_all_order_by_userid 27
-EXEC sp_select_product_by_productid 1
-EXEC sp_delete_user_account_by_userid 27
-EXEC sp_select_product_by_productid 1
+--EXEC sp_select_all_order_by_userid 27
+--EXEC sp_select_product_by_productid 1
+--EXEC sp_delete_user_account_by_userid 27
+--EXEC sp_select_product_by_productid 1
 --GO
 
 
