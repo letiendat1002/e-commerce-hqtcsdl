@@ -35,33 +35,6 @@ GO
 --GO
 
 
--- Select All UserOrder By OrderStatus
-CREATE PROC sp_select_all_order_by_status
-	@status VARCHAR(255)
-AS
-BEGIN
-	IF (@status IS NULL)
-		BEGIN
-			PRINT 'Status must not be null'
-			RETURN
-		END
-	IF (@status != 'PENDING' 
-			AND @status != 'CONFIRMED' 
-			AND @status != 'ON_SHIPPING' 
-			AND @status != 'COMPLETED'
-			AND @status != 'CANCELLED')
-		BEGIN
-			PRINT 'Status must be PENDING / CONFIRMED / ON_SHIPPING / COMPLETED / CANCELLED'
-			RETURN
-		END
-	SELECT * FROM UserOrder WHERE Status = @status
-END
-GO
-
---EXEC sp_select_all_order_by_status 'PENDING'
---GO
-
-
 -- Select One UserOrder By OrderID
 CREATE PROC sp_select_order_by_orderid
 	@id BIGINT

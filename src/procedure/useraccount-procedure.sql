@@ -92,7 +92,9 @@ GO
 --GO
 
 
+-- Transaction
 -- Add UserAccount
+-- DROP PROCEDURE sp_add_user_account
 CREATE PROC sp_add_user_account
 	@phone VARCHAR(255),
 	@password VARCHAR(255),
@@ -102,24 +104,42 @@ CREATE PROC sp_add_user_account
 AS
 BEGIN
 	IF (@gender != 'Male' AND @gender != 'Female' AND @gender != 'Other')
-		PRINT 'Gender must be Male / Female / Other';
-	ELSE IF (@role != 'ADMIN' AND @role != 'EMPLOYEE' AND @role != 'CUSTOMER')
-		PRINT 'Role must be ADMIN / EMPLOYEE / CUSTOMER'
-	ELSE
 		BEGIN
-			DECLARE @isExist BIT
-			EXEC sp_exist_user_account_by_phone @phone, @isExist OUT
-			IF (@isExist = 1)
-				PRINT 'This phone is already existed'
-			ELSE
-				BEGIN
-					INSERT INTO UserAccount
-					VALUES
-						(@phone, HASHBYTES('SHA2_256', @password), @name, @gender, @role)
-
-					PRINT 'Add user account successfully'
-				END
+			PRINT 'Gender must be Male / Female / Other'
+			RETURN
 		END
+	IF (@role != 'ADMIN' AND @role != 'EMPLOYEE' AND @role != 'CUSTOMER')
+		BEGIN
+			PRINT 'Role must be ADMIN / EMPLOYEE / CUSTOMER'
+			RETURN
+		END
+	
+	DECLARE @isExist BIT
+	EXEC sp_exist_user_account_by_phone @phone, @isExist OUT
+	IF (@isExist = 1)
+		BEGIN
+			PRINT 'This phone is already existed'
+			RETURN
+		END
+	BEGIN TRANSACTION
+	BEGIN TRY
+		DECLARE @t nvarchar(4000)
+		SET @t = N'CREATE LOGIN ' + QUOTENAME(@phone) + ' WITH PASSWORD = ' + QUOTENAME(@password, '''')
+		EXEC(@t)
+		SET @t = N'CREATE USER ' + QUOTENAME(@phone) + ' FROM LOGIN ' + QUOTENAME(@phone)
+		EXEC(@t)
+		SET @t = N'ALTER ROLE [customer] ADD MEMBER ' + QUOTENAME(@phone)
+		EXEC(@t)
+		INSERT INTO UserAccount
+		VALUES
+			(@phone, HASHBYTES('SHA2_256', @password), @name, @gender, @role)
+		COMMIT TRANSACTION
+		PRINT 'Add user account successfully'
+	END TRY
+	BEGIN CATCH
+		PRINT 'Procedure sp_add_user_account perform failed'
+		ROLLBACK TRANSACTION
+	END CATCH
 END
 GO
 
@@ -196,68 +216,158 @@ GO
 --EXEC sp_select_user_account_by_phone '1111111111'
 --GO
 
-
+-- Transaction
 -- Update UserAccount Role By UserID
+--DROP PROCEDURE sp_update_user_account_role_by_userid
 CREATE PROC sp_update_user_account_role_by_userid
 	@userid BIGINT,
 	@newrole VARCHAR(255)
 AS
 BEGIN
 	IF (@newrole != 'ADMIN' AND @newrole != 'EMPLOYEE' AND @newrole != 'CUSTOMER')
-		PRINT 'Role must be ADMIN / EMPLOYEE / CUSTOMER'
-	ELSE
 		BEGIN
-			DECLARE @isExist BIT
-			EXEC sp_exist_user_account_by_userid @userid, @isExist OUT
-			IF (@isExist = 0)
-				PRINT 'UserAccount not exist by this UserID'
-			ELSE
-				BEGIN
-					UPDATE UserAccount
-					SET Role = @newrole
-					WHERE UserID = @userid
-
-					PRINT 'Update role successfully'
-				END
+			PRINT 'Role must be ADMIN / EMPLOYEE / CUSTOMER'
+			RETURN
 		END
+	DECLARE @isExist BIT
+	EXEC sp_exist_user_account_by_userid @userid, @isExist OUT
+	IF (@isExist = 0)
+		BEGIN
+			PRINT 'UserAccount not exist by this UserID'
+			RETURN
+		END
+	BEGIN TRANSACTION
+	BEGIN TRY
+		DECLARE @oldrole VARCHAR(255)
+		SELECT @oldrole = Role FROM UserAccount WHERE UserID = @userid
+		DECLARE @phone VARCHAR(255)
+		SELECT @phone = Phone FROM UserAccount WHERE UserID = @userid
+		DECLARE @t nvarchar(4000)
+
+		IF (@oldrole = 'ADMIN')
+			BEGIN
+				SET @t = N'ALTER ROLE [db_owner] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)		
+			END
+		IF (@oldrole = 'EMPLOYEE')
+			BEGIN
+				SET @t = N'ALTER ROLE [employee] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+		IF (@oldrole = 'CUSTOMER')
+			BEGIN
+				SET @t = N'ALTER ROLE [customer] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+
+		IF (@newrole = 'ADMIN')
+			BEGIN
+				SET @t = N'ALTER ROLE [db_owner] ADD MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)		
+			END
+		IF (@newrole = 'EMPLOYEE')
+			BEGIN
+				SET @t = N'ALTER ROLE [employee] ADD MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+		IF (@newrole = 'CUSTOMER')
+			BEGIN
+				SET @t = N'ALTER ROLE [customer] ADD MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+		UPDATE UserAccount
+		SET Role = @newrole
+		WHERE UserID = @userid
+
+		COMMIT TRANSACTION
+		PRINT 'Update role successfully'
+	END TRY
+	BEGIN CATCH
+		PRINT 'Procedure sp_update_user_account_role_by_userid perfom failed'
+		ROLLBACK TRANSACTION
+	END CATCH
 END
 GO
 
---EXEC sp_select_user_account_by_userid 2
---EXEC sp_update_user_account_role_by_userid 2, 'CUSTOMER'
---EXEC sp_select_user_account_by_userid 2
+--EXEC sp_select_user_account_by_userid 34
+--EXEC sp_update_user_account_role_by_userid 34, 'EMPLOYEE'
+--EXEC sp_select_user_account_by_userid 34
 --GO
 
 
 -- Update UserAccount Role By Phone
+--DROP PROCEDURE sp_update_user_account_role_by_phone
 CREATE PROC sp_update_user_account_role_by_phone
 	@phone VARCHAR(255),
 	@newrole VARCHAR(255)
 AS
 BEGIN
 	IF (@newrole != 'ADMIN' AND @newrole != 'EMPLOYEE' AND @newrole != 'CUSTOMER')
-		PRINT 'Role must be ADMIN / EMPLOYEE / CUSTOMER'
-	ELSE
 		BEGIN
-			DECLARE @isExist BIT
-			EXEC sp_exist_user_account_by_phone @phone, @isExist OUT
-			IF (@isExist = 0)
-				PRINT 'UserAccount not exist by this Phone number'
-			ELSE
-				BEGIN
-					UPDATE UserAccount
-					SET Role = @newrole
-					WHERE Phone = @phone
-
-					PRINT 'Update role successfully'
-				END
+			PRINT 'Role must be ADMIN / EMPLOYEE / CUSTOMER'
+			RETURN
 		END
+	DECLARE @isExist BIT
+	EXEC sp_exist_user_account_by_phone @phone, @isExist OUT
+	IF (@isExist = 0)
+		BEGIN
+			PRINT 'UserAccount not exist by this Phone number'
+			RETURN
+		END
+	BEGIN TRANSACTION
+	BEGIN TRY
+		DECLARE @oldrole VARCHAR(255)
+		SELECT @oldrole = Role FROM UserAccount WHERE Phone = @phone
+		DECLARE @t nvarchar(4000)
+
+		IF (@oldrole = 'ADMIN')
+			BEGIN
+				SET @t = N'ALTER ROLE [db_owner] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)		
+			END
+		IF (@oldrole = 'EMPLOYEE')
+			BEGIN
+				SET @t = N'ALTER ROLE [employee] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+		IF (@oldrole = 'CUSTOMER')
+			BEGIN
+				SET @t = N'ALTER ROLE [customer] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+
+		IF (@newrole = 'ADMIN')
+			BEGIN
+				SET @t = N'ALTER ROLE [db_owner] DROP MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)		
+			END
+		IF (@newrole = 'EMPLOYEE')
+			BEGIN
+				SET @t = N'ALTER ROLE [employee] ADD MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+		IF (@newrole = 'CUSTOMER')
+			BEGIN
+				SET @t = N'ALTER ROLE [customer] ADD MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
+			END
+		UPDATE UserAccount
+		SET Role = @newrole
+		WHERE Phone = @phone
+
+		COMMIT TRANSACTION
+		PRINT 'Update role successfully'
+	END TRY
+	BEGIN CATCH
+		PRINT 'Procedure sp_update_user_account_role_by_phone perfom failed'
+		ROLLBACK TRANSACTION
+	END CATCH
 END
 GO
 
---EXEC sp_select_user_account_by_phone '1111111111'
---EXEC sp_update_user_account_role_by_phone '1111111111', 'EMPLOYEE'
---EXEC sp_select_user_account_by_phone '1111111111'
+--EXEC sp_select_user_account_by_phone 'testthanhcong'
+--EXEC sp_update_user_account_role_by_phone 'testthanhcong', 'CUSTOMER'
+--EXEC sp_select_user_account_by_phone 'testthanhcong'
 --GO
 
 -- Transaction

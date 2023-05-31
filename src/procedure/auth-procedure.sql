@@ -2,7 +2,9 @@ USE myecommerce
 GO
 
 -- Auth
+-- Transaction
 -- Register
+-- DROP PROCEDURE sp_register
 CREATE PROC sp_register
 	@phone VARCHAR(255),
 	@password VARCHAR(255),
@@ -17,16 +19,34 @@ BEGIN
 			DECLARE @isExist BIT
 			EXEC sp_exist_user_account_by_phone @phone, @isExist OUT
 			IF (@isExist = 1)
-				PRINT 'This phone is already existed'
-			ELSE
+				BEGIN
+					PRINT 'This phone is already existed'
+					RETURN
+				END
+			BEGIN TRANSACTION
+			BEGIN TRY
+				DECLARE @t nvarchar(4000)
+				SET @t = N'CREATE LOGIN ' + QUOTENAME(@phone) + ' WITH PASSWORD = ' + QUOTENAME(@password, '''')
+				EXEC(@t)
+				SET @t = N'CREATE USER ' + QUOTENAME(@phone) + ' FROM LOGIN ' + QUOTENAME(@phone)
+				EXEC(@t)
+				SET @t = N'ALTER ROLE [customer] ADD MEMBER ' + QUOTENAME(@phone)
+				EXEC(@t)
 				INSERT INTO UserAccount
 				VALUES
 					(@phone, HASHBYTES('SHA2_256', @password), @name, @gender, 'CUSTOMER')
+				COMMIT TRANSACTION
+				PRINT 'Register successfully'
+			END TRY
+			BEGIN CATCH
+				PRINT 'Procedure sp_register perform failed'
+				ROLLBACK TRANSACTION
+			END CATCH
 		END
 END
 GO
 
---EXEC sp_register '5555555555', 'password', 'New5', 'Male'
+--EXEC sp_register 'testthanhcong', 'password', 'New5', 'Male'
 --GO
 
 
