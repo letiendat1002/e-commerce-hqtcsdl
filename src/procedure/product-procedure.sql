@@ -342,6 +342,7 @@ GO
 
 
 -- Update Product Quantity By Amount
+--DROP PROCEDURE sp_update_product_quantity_by_amount
 CREATE PROC sp_update_product_quantity_by_amount
 	@id BIGINT,
 	@amount INT
@@ -350,28 +351,32 @@ BEGIN
 	DECLARE @isExist BIT
 	EXEC sp_exist_product_by_productid @id, @isExist OUT
 	IF (@isExist = 0)
-		PRINT 'Product not exist by this ProductID'
-	ELSE
 		BEGIN
-			DECLARE @quantity INT
-			EXEC sp_select_product_quantity_by_productid 40, @quantity OUT
-			IF (@amount < 0)
+			PRINT 'Product not exist by this ProductID'
+			;THROW 50000, '', 1;
+		END
+	DECLARE @quantity INT
+	SELECT @quantity = Quantity FROM Product WHERE ProductID = @id
+
+	IF (@amount < 0)
+		BEGIN
+			DECLARE @absoluteAmount INT = ABS(@amount)
+			IF (@quantity < @absoluteAmount)
 				BEGIN
-					DECLARE @absoluteAmount INT = ABS(@amount)
-					IF (@quantity < @absoluteAmount)
-						BEGIN
-							PRINT 'Product quantity in stock is not enough'
-							RETURN;
-						END
+					PRINT 'Product quantity in stock is not enough'
+					;THROW 50000, '', 1; 
 				END
-			UPDATE Product
-			SET Quantity = (@quantity + @amount)
-			WHERE ProductID = @id
-		END	
+		END
+	DECLARE @newquantity INT = @quantity + @amount
+
+	UPDATE Product
+	SET Quantity = @newquantity
+	WHERE ProductID = @id
 END
 GO
 
---EXEC sp_select_product_by_productid 40
---EXEC sp_update_product_quantity_by_amount 40, -10
---EXEC sp_select_product_by_productid 40
+--EXEC sp_select_product_by_productid 5
+--EXEC sp_update_product_quantity_by_amount 5, -1000
+--EXEC sp_select_product_by_productid 5
 --GO
+

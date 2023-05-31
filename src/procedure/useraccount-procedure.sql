@@ -262,25 +262,43 @@ GO
 
 -- Transaction
 -- Delete UserAccount By UserID
+-- DROP PROCEDURE sp_delete_user_account_by_userid
 CREATE PROC sp_delete_user_account_by_userid
-	@userid BIGINT
+	@id BIGINT
 AS
 BEGIN
-	DECLARE @isExist BIT
-	EXEC sp_exist_user_account_by_userid @userid, @isExist OUT
-	IF (@isExist = 0)
-		PRINT 'UserAccount not exist by this UserID'
-	ELSE
+	IF (@id IS NULL)
 		BEGIN
-			DELETE FROM UserAccount
-			WHERE UserID = @userid
-
-			PRINT 'Delete user account successfully'
+			PRINT 'UserID must not be null'
+			RETURN
 		END
+	DECLARE @isExist BIT
+	EXEC sp_exist_user_account_by_userid @id, @isExist OUT
+	IF (@isExist = 0)
+		BEGIN
+			PRINT 'User not exist by this UserID'
+			RETURN
+		END
+
+	BEGIN TRANSACTION
+	BEGIN TRY
+		EXEC sp_delete_all_order_by_userid @id
+		DELETE FROM UserAccount
+		WHERE UserID = @id
+		COMMIT TRANSACTION
+		PRINT 'Delete user successfully'
+	END TRY
+	BEGIN CATCH
+		PRINT 'Procedure sp_delete_user_account_by_userid perform failed'
+		ROLLBACK TRANSACTION
+	END CATCH
 END
 GO
 
---EXEC sp_delete_user_account_by_userid 30
+EXEC sp_select_all_order_by_userid 27
+EXEC sp_select_product_by_productid 1
+EXEC sp_delete_user_account_by_userid 27
+EXEC sp_select_product_by_productid 1
 --GO
 
 
