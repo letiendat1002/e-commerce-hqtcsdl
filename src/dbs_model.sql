@@ -44,8 +44,11 @@ CREATE TABLE UserOrder (
   AdditionalPrice BIGINT  NOT NULL,
   PaymentType VARCHAR(255) NOT NULL,
   Address VARCHAR(255) NOT NULL,
-  DateOrder DATE NOT NULL,
   Status VARCHAR(255) NOT NULL,
+  DateOrder DATETIME NOT NULL,
+  DateConfirmed DATETIME NULL,
+  DateShipping DATETIME NULL,
+  DateCompleted DATETIME NULL,
   PRIMARY KEY (OrderID),
   CONSTRAINT fk_UserOrder_UserAccount
     FOREIGN KEY (UserID)
