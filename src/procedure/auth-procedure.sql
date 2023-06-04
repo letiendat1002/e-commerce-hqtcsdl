@@ -46,8 +46,8 @@ BEGIN
 END
 GO
 
---EXEC sp_register 'testthanhcong', 'password', 'New5', 'Male'
---GO
+EXEC sp_register '0867808506', 'password', 'Test Customer', 'Male'
+GO
 
 
 -- Authenticate (Login)
@@ -63,7 +63,7 @@ END
 GO
 
 --DECLARE @isAuthenticated BIT
---EXEC sp_authenticate '1111111111', 'password', @isAuthenticated OUT
+--EXEC sp_authenticate '0867808506', 'password', @isAuthenticated OUT
 --SELECT @isAuthenticated
 --GO
 
@@ -90,7 +90,7 @@ BEGIN
 END
 GO
 
---EXEC sp_change_password '1111111111', 'password', 'newpassword'
+--EXEC sp_change_password '0867808506', 'password', 'newpassword'
 --GO
 
 
@@ -108,5 +108,5 @@ BEGIN
 END
 GO
 
---EXEC sp_reset_password '1111111111'
+--EXEC sp_reset_password '0867808506'
 --GO
