@@ -17,8 +17,6 @@ BACKUP LOG myecommerce
 TO DISK = N'C:\backup\Backup.trn'
 WITH DESCRIPTION = 'Ecommerce Log Backup'
 
--- auto backup transaction log sau moi transaction
-
 --Restore full ve trang thai ban dau
 USE master
 GO
